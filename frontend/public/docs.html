@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Docs — HOPEZ.AI</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="marketing">
+  <div data-slot="header"></div>
+
+  <main class="container" style="padding: 56px 0;">
+    <h1 class="serif" style="font-family:var(--font-serif);font-weight:500">Documentation</h1>
+    <p class="lead muted">Everything you need to integrate HOPEZ.AI in under five minutes.</p>
+
+    <hr/>
+
+    <h2>1. Create an account</h2>
+    <p>Sign up at <a href="/signup">/signup</a>. You'll receive 100 free credits and the ability to issue one API key — enough to evaluate the full platform.</p>
+
+    <h2>2. Generate an API key</h2>
+    <p>Open the <a href="/dashboard">Console</a>, choose <strong>API Keys</strong>, and click <em>Create key</em>. The full secret is shown only once; store it securely. Keys are prefixed <code>hpz_aidfz_</code>.</p>
+
+    <h2>3. Make your first request</h2>
+    <p>The HOPEZ.AI API is plain HTTPS + JSON. Point any HTTP client at <code>https://api.hopez.ai/v1</code> and use your HOPEZ key.</p>
+
+    <h3>Node.js</h3>
+    <div class="codeblock">
+      <button class="copy" onclick="HZ.copy(this.nextElementSibling.innerText)">Copy</button>
+<pre><code>const res = await fetch("https://api.hopez.ai/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${process.env.HOPEZ_API_KEY}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "hopez-mini",
+    messages: [{ role: "user", content: "Say hello in French." }]
+  })
+});
+const data = await res.json();</code></pre>
+    </div>
+
+    <h3>Python</h3>
+    <div class="codeblock">
+      <button class="copy" onclick="HZ.copy(this.nextElementSibling.innerText)">Copy</button>
+<pre><code>import os, requests
+
+resp = requests.post(
+    "https://api.hopez.ai/v1/chat/completions",
+    headers={
+        "Authorization": f"Bearer {os.environ['HOPEZ_API_KEY']}",
+        "Content-Type": "application/json",
+    },
+    json={
+        "model": "hopez-mini",
+        "messages": [{"role": "user", "content": "Hello!"}],
+    },
+)
+data = resp.json()</code></pre>
+    </div>
+
+    <h3>cURL</h3>
+    <div class="codeblock">
+      <button class="copy" onclick="HZ.copy(this.nextElementSibling.innerText)">Copy</button>
+<pre><code>curl https://api.hopez.ai/v1/chat/completions \
+  -H "Authorization: Bearer $HOPEZ_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "hopez-mini",
+    "messages": [{"role":"user","content":"Hello"}]
+  }'</code></pre>
+    </div>
+
+    <h2>Supported endpoints</h2>
+    <ul>
+      <li><code>POST /v1/chat/completions</code></li>
+      <li><code>POST /v1/embeddings</code></li>
+      <li><code>GET&nbsp; /v1/models</code></li>
+    </ul>
+
+    <h2>Authentication</h2>
+    <p>Include your key as a bearer token: <code>Authorization: Bearer hpz_aidfz_…</code>. Each request deducts credits from your account balance based on the model's published rate.</p>
+
+    <h2>Rate limits</h2>
+    <p>Free tier: 60 requests/minute per key. Paid tiers scale to 600 RPM by default; enterprise users may request a higher limit.</p>
+
+    <h2>Errors</h2>
+    <p>HOPEZ.AI returns standard HTTP status codes:</p>
+    <ul>
+      <li><code>401</code> — invalid or revoked API key</li>
+      <li><code>402</code> — insufficient credits</li>
+      <li><code>429</code> — rate limit exceeded</li>
+      <li><code>5xx</code> — service temporarily unavailable</li>
+    </ul>
+  </main>
+
+  <div data-slot="footer"></div>
+  <script src="/assets/js/hopez.js"></script>
+  <script src="/assets/js/layout.js"></script>
+</body>
+</html>

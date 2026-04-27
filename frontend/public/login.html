@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign in — HOPEZ.AI</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="marketing">
+  <div data-slot="header"></div>
+  <main class="container">
+    <div class="card card-narrow elevated">
+      <h2 class="serif" style="font-family:var(--font-serif);font-weight:500;text-align:center;margin-bottom:6px">Welcome back</h2>
+      <p class="muted center" style="margin-bottom:20px">Sign in to your console.</p>
+      <form id="f">
+        <div class="field">
+          <label class="label" for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label class="label" for="password">Password</label>
+          <input id="password" name="password" type="password" required autocomplete="current-password" />
+        </div>
+        <button class="btn brand block" type="submit">Sign in</button>
+        <p class="error" id="err"></p>
+      </form>
+      <p class="center" style="margin-top:14px"><a href="/forgot">Forgot your password?</a></p>
+      <div class="divider"></div>
+      <p class="center muted" style="margin:0">New here? <a href="/signup">Create an account</a></p>
+    </div>
+  </main>
+  <div data-slot="footer"></div>
+  <script src="/assets/js/hopez.js"></script>
+  <script src="/assets/js/layout.js"></script>
+  <script>
+    document.getElementById('f').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target, err = document.getElementById('err');
+      err.textContent = '';
+      try {
+        await HZ.api.login({ email: f.email.value.trim(), password: f.password.value });
+        location.href = '/dashboard';
+      } catch (ex) { err.textContent = ex.message; }
+    });
+  </script>
+</body>
+</html>

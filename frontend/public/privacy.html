@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Privacy Policy — HOPEZ.AI</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="marketing">
+  <div data-slot="header"></div>
+  <main class="container" style="padding: 64px 0; max-width: 760px;">
+    <h1 class="serif" style="font-family:var(--font-serif);font-weight:500">Privacy Policy</h1>
+    <p class="muted">Last updated: <span id="d"></span></p>
+
+    <h2>What we collect</h2>
+    <ul>
+      <li><strong>Account data</strong>: name, email, password hash.</li>
+      <li><strong>Usage data</strong>: API request metadata (model, token counts, timestamps). We do not log prompt or completion content beyond what is required for debugging by request.</li>
+      <li><strong>Billing data</strong>: handled by our payment processor — we do not store card numbers.</li>
+    </ul>
+
+    <h2>How we use it</h2>
+    <p>To operate the service, prevent abuse, generate invoices, and improve reliability. We do not sell personal data.</p>
+
+    <h2>Sharing</h2>
+    <p>API requests are processed by HOPEZ.AI infrastructure under our data policy. Aggregated, non-identifying usage may be used to improve the platform.</p>
+
+    <h2>Retention</h2>
+    <p>Account data is retained while your account is active and for up to 90 days after deletion to satisfy legal and accounting obligations.</p>
+
+    <h2>Your rights</h2>
+    <p>You may request export or deletion of your data at any time by emailing <a href="mailto:privacy@hopez.ai">privacy@hopez.ai</a>.</p>
+  </main>
+  <div data-slot="footer"></div>
+  <script src="/assets/js/hopez.js"></script>
+  <script src="/assets/js/layout.js"></script>
+  <script>document.getElementById('d').textContent = new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});</script>
+</body>
+</html>

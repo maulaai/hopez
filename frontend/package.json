@@ -1,0 +1,18 @@
+{
+  "name": "hopez-web",
+  "version": "0.2.0",
+  "private": true,
+  "description": "HOPEZ.AI frontend — marketing site + developer console.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "http-proxy-middleware": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,44 @@
+# --- Dependencies ---
+node_modules/
+**/node_modules/
+
+# --- Env / secrets ---
+.env
+**/.env
+*.env.local
+*.env.*.local
+*.local
+.pool-master-key*
+
+# --- SSH / TLS keys ---
+*.pem
+*.key
+*.pfx
+*.p12
+*.crt
+id_rsa
+id_ed25519
+
+# --- Logs / runtime data ---
+*.log
+data/
+backend/data/
+**/logs/
+.DS_Store
+.vscode/
+.idea/
+
+# --- Build / packaging artifacts ---
+*.tgz
+*.tar.gz
+*.zip
+dist/
+build/
+
+# --- Pool seed files contain plaintext upstream keys — never commit ---
+backend/config/backend-keys.pool.json
+**/backend-keys.pool.json
+
+# --- Local deploy helper scripts (may contain hostnames/secrets) ---
+deploy.sh
+deploy2.sh

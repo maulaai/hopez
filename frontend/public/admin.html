@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · HOPEZ.AI</title>
+  <link rel="stylesheet" href="/assets/css/hopez.css" />
+  <link rel="stylesheet" href="/assets/css/console.css" />
+</head>
+<body class="console">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand-mark"><a href="/dashboard" style="text-decoration:none;color:inherit"><strong>HOPEZ.AI</strong></a></div>
+      <div class="section-label">Admin</div>
+      <a href="#pool" data-tab="pool" class="active">🛡️ Pool</a>
+      <a href="#bindings" data-tab="bindings">📜 Bindings log</a>
+      <a href="#import" data-tab="import">📥 Import keys</a>
+      <div class="section-label" style="margin-top:18px">Workspace</div>
+      <a href="/dashboard">← Back to console</a>
+    </aside>
+
+    <main>
+      <section data-pane="pool">
+        <h1 class="page-title">Backend key pool</h1>
+        <p class="page-sub">Each frontend key is bound 1:1 to a dedicated upstream key. Plaintext keys never leave the server.</p>
+
+        <div class="grid cols-3" id="poolStats" style="margin-bottom:20px"></div>
+
+        <div class="card">
+          <div class="row" style="margin-bottom:10px">
+            <h3 style="margin:0">Pool keys</h3>
+            <select id="poolFilter">
+              <option value="">All statuses</option>
+              <option value="available">available</option>
+              <option value="assigned">assigned</option>
+              <option value="cooling_down">cooling_down</option>
+              <option value="revoked">revoked</option>
+              <option value="exhausted">exhausted</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead><tr><th>ID</th><th>Label</th><th>Status</th><th>Bound to</th><th>Requests</th><th>Last used</th><th></th></tr></thead>
+              <tbody id="poolBody"><tr><td colspan="7" class="muted" style="padding:24px">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section data-pane="bindings" class="hidden">
+        <h1 class="page-title">Binding audit log</h1>
+        <p class="page-sub">Every lease, release, rotation, and revocation. Tamper-evident timeline.</p>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>When</th><th>Action</th><th>Frontend key</th><th>Backend key</th><th>Reason</th></tr></thead>
+            <tbody id="bindingsBody"><tr><td colspan="5" class="muted" style="padding:24px">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section data-pane="import" class="hidden">
+        <h1 class="page-title">Import upstream keys</h1>
+        <p class="page-sub">Paste a JSON array. Each key is encrypted with AES-256-GCM at rest.</p>
+        <div class="card">
+          <textarea id="importJson" rows="10" style="width:100%;font-family:'JetBrains Mono',monospace" placeholder='[ { "label": "pool-001", "key": "&lt;upstream-key&gt;", "monthly_quota": 50000 } ]'></textarea>
+          <div class="row" style="margin-top:12px">
+            <button class="btn brand" id="importBtn">Import</button>
+            <span id="importStatus" class="muted"></span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/assets/js/hopez.js"></script>
+  <script src="/assets/js/admin.js"></script>
+</body>
+</html>

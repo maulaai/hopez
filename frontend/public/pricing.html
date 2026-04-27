@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pricing — HOPEZ.AI</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="marketing">
+  <div data-slot="header"></div>
+
+  <main>
+    <section class="hero container" style="padding: 64px 0 32px;">
+      <h1 class="serif" style="font-family:var(--font-serif);font-weight:500;font-size:48px">Simple, predictable pricing.</h1>
+      <p class="lead">Darling, pay only for what you use. Upgrade anytime, downgrade whenever.</p>
+    </section>
+
+    <section class="container">
+      <div class="plans" id="plans">
+        <div class="plan"><p class="muted">Loading plans…</p></div>
+      </div>
+    </section>
+
+    <section class="container">
+      <h2 class="serif" style="font-family:var(--font-serif);font-weight:500">Frequently asked</h2>
+      <div class="grid cols-2" style="margin-top:18px">
+        <div class="card">
+          <h3>What is a credit?</h3>
+          <p>One credit equals roughly 1,000 tokens of <code>hopez-mini</code> input/output. Heavier models consume more credits per call. Exact rates are published in the docs.</p>
+        </div>
+        <div class="card">
+          <h3>Do credits roll over?</h3>
+          <p>Yes — purchased credits never expire as long as your account is active. Free-tier credits reset monthly.</p>
+        </div>
+        <div class="card">
+          <h3>Can I cancel?</h3>
+          <p>Of course. Subscriptions can be canceled at any time from your billing settings; you keep access until the end of the period.</p>
+        </div>
+        <div class="card">
+          <h3>Is there a free tier?</h3>
+          <p>Yes. Every account starts on the Free plan with 100 credits and one API key — enough to evaluate the platform end-to-end.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div data-slot="footer"></div>
+  <script src="/assets/js/hopez.js"></script>
+  <script src="/assets/js/layout.js"></script>
+  <script>
+    (async () => {
+      const wrap = document.getElementById('plans');
+      try {
+        const { plans } = await HZ.api.plans();
+        wrap.innerHTML = plans.map(p => `
+          <div class="plan ${p.recommended ? 'recommended' : ''}">
+            ${p.recommended ? '<span class="tag brand" style="align-self:flex-start;margin-bottom:6px">Recommended</span>' : ''}
+            <h3>${p.name}</h3>
+            <div class="muted" style="font-size:13.5px">${p.tagline || ''}</div>
+            <div class="price">${p.price_cents === 0 ? 'Free' : '$' + (p.price_cents/100).toFixed(0)}<small>${p.price_cents === 0 ? '' : ' / month'}</small></div>
+            <div class="muted" style="font-size:13px">${p.credits.toLocaleString()} credits${p.price_cents === 0 ? ' / month' : ' included'}</div>
+            <ul>${(p.features||[]).map(f => `<li>${f}</li>`).join('')}</ul>
+            <a class="btn ${p.recommended ? 'brand' : ''}" href="/signup?plan=${p.id}">
+              ${p.price_cents === 0 ? 'Start free' : 'Choose ' + p.name}
+            </a>
+          </div>
+        `).join('');
+      } catch (e) {
+        wrap.innerHTML = `<div class="alert danger">Could not load plans: ${e.message}</div>`;
+      }
+    })();
+  </script>
+</body>
+</html>

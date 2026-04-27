@@ -1,0 +1,23 @@
+{
+  "name": "hopez",
+  "version": "0.2.0",
+  "private": true,
+  "description": "HOPEZ.AI monorepo — backend API + developer console frontend.",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "install:all": "npm install --workspaces --include-workspace-root",
+    "dev:api":  "npm run dev --workspace=hopez-api",
+    "dev:web":  "npm run dev --workspace=hopez-web",
+    "start:api": "npm run start --workspace=hopez-api",
+    "start:web": "npm run start --workspace=hopez-web",
+    "dev":      "concurrently -n api,web -c yellow,cyan \"npm run dev:api\" \"npm run dev:web\"",
+    "start":    "concurrently -n api,web -c yellow,cyan \"npm run start:api\" \"npm run start:web\"",
+    "smoke":    "npm run smoke --workspace=hopez-api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Create your account — HOPEZ.AI</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="marketing">
+  <div data-slot="header"></div>
+  <main class="container">
+    <div class="card card-narrow elevated">
+      <h2 class="serif" style="font-family:var(--font-serif);font-weight:500;text-align:center;margin-bottom:6px">Create your account</h2>
+      <p class="muted center" style="margin-bottom:20px">Free forever — 100 credits to start.</p>
+      <form id="f">
+        <div class="field">
+          <label class="label" for="name">Full name</label>
+          <input id="name" name="name" type="text" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label class="label" for="email">Work email</label>
+          <input id="email" name="email" type="email" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label class="label" for="password">Password</label>
+          <input id="password" name="password" type="password" minlength="8" required autocomplete="new-password" />
+          <div class="help">At least 8 characters.</div>
+        </div>
+        <button class="btn brand block" type="submit">Create account</button>
+        <p class="error" id="err"></p>
+      </form>
+      <div class="divider"></div>
+      <p class="center muted" style="margin:0">Already have an account? <a href="/login">Sign in</a></p>
+    </div>
+  </main>
+  <div data-slot="footer"></div>
+  <script src="/assets/js/hopez.js"></script>
+  <script src="/assets/js/layout.js"></script>
+  <script>
+    document.getElementById('f').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target, err = document.getElementById('err');
+      err.textContent = '';
+      try {
+        await HZ.api.signup({
+          name: f.name.value.trim(),
+          email: f.email.value.trim(),
+          password: f.password.value
+        });
+        location.href = '/dashboard?welcome=1' + (HZ.qs('plan') ? '&plan=' + HZ.qs('plan') : '');
+      } catch (ex) { err.textContent = ex.message; }
+    });
+  </script>
+</body>
+</html>

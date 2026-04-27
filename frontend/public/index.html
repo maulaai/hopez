@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HOPEZ.AI — Reliable AI APIs for developers</title>
+  <meta name="description" content="One API key. Every model. Built for production." />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="marketing">
+  <div data-slot="header"></div>
+
+  <main>
+    <section class="hero container">
+      <span class="eyebrow">v0.2 — Developer preview</span>
+      <h1 class="serif">Production-ready AI APIs,<br/>without the boilerplate.</h1>
+      <p class="lead">
+        HOPEZ.AI gives developers a single, REST-compatible AI endpoint with built-in
+        authentication, usage metering, and predictable billing. Ship in minutes.
+      </p>
+      <div class="cta">
+        <a class="btn brand lg" href="/signup">Create free account</a>
+        <a class="btn lg" href="/docs">Read the docs →</a>
+      </div>
+      <div class="logos">Trusted by indie hackers · agencies · production teams</div>
+    </section>
+
+    <section class="container">
+      <div class="grid cols-3">
+        <div class="feature">
+          <div class="icon">⚡</div>
+          <h3>Drop-in REST API</h3>
+          <p>Standard HTTPS + JSON. Use any HTTP client with <code>/v1</code> and your HOPEZ key.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">🔑</div>
+          <h3>Scoped API keys</h3>
+          <p>Issue, rotate, and revoke <code>hpz_aidfz_…</code> keys per project from one console.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">📊</div>
+          <h3>Transparent usage</h3>
+          <p>Live credit balance, per-key activity, and exportable invoices — never get surprised.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">🛡️</div>
+          <h3>Secure by default</h3>
+          <p>HttpOnly session cookies, rate-limited auth, and bcrypt password hashing out of the box.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">💳</div>
+          <h3>Pay as you grow</h3>
+          <p>Start free with 100 credits. Upgrade with one click when you need more headroom.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">🧩</div>
+          <h3>Model agnostic</h3>
+          <p>Today: <code>hopez-pro</code>, <code>hopez-mini</code>, embeddings. More tiers coming.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card elevated">
+        <div class="row">
+          <div>
+            <h2 class="serif" style="font-family:var(--font-serif);font-weight:500">Get started in 30 seconds</h2>
+            <p class="muted">Make a single HTTPS request — from any language.</p>
+          </div>
+          <a class="btn" href="/docs">Full docs →</a>
+        </div>
+        <div class="codeblock">
+          <button class="copy" onclick="HZ.copy(this.nextElementSibling.innerText)">Copy</button>
+<pre><code>curl https://api.hopez.ai/v1/chat/completions \
+  -H "Authorization: Bearer $HOPEZ_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "hopez-mini",
+    "messages": [{"role":"user","content":"Hello!"}]
+  }'</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="container center">
+      <h2 class="serif" style="font-family:var(--font-serif);font-weight:500;font-size:36px">Ready when you are.</h2>
+      <p class="muted" style="max-width:520px;margin:0 auto 20px">No credit card required. Free tier includes 100 credits and one API key.</p>
+      <a class="btn brand lg" href="/signup">Start building →</a>
+    </section>
+  </main>
+
+  <div data-slot="footer"></div>
+  <script src="/assets/js/hopez.js"></script>
+  <script src="/assets/js/layout.js"></script>
+</body>
+</html>
