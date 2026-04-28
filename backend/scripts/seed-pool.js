@@ -1,72 +1,54 @@
-#!/usr/bin/env node
 'use strict';
 
 /**
- * Seeds the backend_keys pool from a JSON file.
- *
- * File format:
- *   [
- *     { "provider": "openai", "label": "pool-001", "key": "sk-...", "monthly_quota": 50000 },
- *     ...
- *   ]
- *
- * Usage:
- *   HOPEZ_POOL_MASTER_KEY=... node scripts/seed-pool.js [path/to/file.json]
- *
- * Defaults to HOPEZ_POOL_SEED_FILE env var, then ./config/backend-keys.pool.json.
+ * Seed the backend pool with mock keys (dev only) or real keys from env.
+ *   node scripts/seed-pool.js            # 305 mock keys
+ *   node scripts/seed-pool.js --real     # comma-separated POOL_SEED_KEYS env var
  */
 
 require('dotenv').config();
-const fs = require('fs');
-const path = require('path');
+const db = require('../src/db');
 const pool = require('../src/pool');
 const { loadConfig } = require('../src/config');
 
-const cfg = loadConfig();
-const argPath = process.argv[2];
-const filePath = path.resolve(
-  argPath ||
-  process.env.HOPEZ_POOL_SEED_FILE ||
-  path.join(__dirname, '..', 'config', 'backend-keys.pool.json')
-);
-
-if (!fs.existsSync(filePath)) {
-  console.error(`Seed file not found: ${filePath}`);
-  process.exit(1);
-}
-
-let items;
-try {
-  items = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-} catch (e) {
-  console.error('Invalid JSON:', e.message);
-  process.exit(1);
-}
-if (!Array.isArray(items)) {
-  console.error('Seed file must be a JSON array.');
-  process.exit(1);
-}
-
-let added = 0, dedup = 0, skipped = 0;
-for (const it of items) {
-  if (!it?.key || typeof it.key !== 'string') { skipped++; continue; }
+(async () => {
   try {
-    const r = pool.importKey({
-      provider: it.provider || cfg.pool.provider,
-      label: it.label || null,
-      key: it.key,
-      monthly_quota: it.monthly_quota || null
-    });
-    if (r.dedup) dedup++; else added++;
-  } catch (e) {
-    skipped++;
-    console.error(`  ! skip ${it.label || '(no label)'}: ${e.message}`);
-  }
-}
+    await db.init();
+    const cfg = loadConfig();
+    const real = process.argv.includes('--real');
 
-const stats = pool.stats();
-console.log(`Seed complete: added=${added}, dedup=${dedup}, skipped=${skipped}`);
-console.log(`Pool now: total=${stats.total} available=${stats.available} assigned=${stats.assigned} cooling_down=${stats.cooling_down} revoked=${stats.revoked} exhausted=${stats.exhausted}`);
-if (stats.total < cfg.pool.min_size) {
-  console.warn(`WARNING: pool size ${stats.total} is below min_size ${cfg.pool.min_size}.`);
-}
+    let keys = [];
+    if (real) {
+      const raw = process.env.POOL_SEED_KEYS || '';
+      keys = raw.split(',').map(s => s.trim()).filter(Boolean).map((k, i) => ({
+        provider: cfg.pool.provider, label: `real#${i + 1}`, key: k
+      }));
+      if (!keys.length) {
+        console.error('No POOL_SEED_KEYS set. Set env var POOL_SEED_KEYS=k1,k2,...');
+        process.exit(1);
+      }
+    } else {
+      const N = 305;
+      for (let i = 1; i <= N; i++) {
+        keys.push({
+          provider: cfg.pool.provider,
+          label: `mock#${i}`,
+          key: `sk-mock-${i.toString().padStart(4, '0')}-${require('crypto').randomBytes(12).toString('hex')}`
+        });
+      }
+    }
+
+    let added = 0, dedup = 0;
+    for (const k of keys) {
+      const r = await pool.importKey(k);
+      if (r.dedup) dedup++; else added++;
+    }
+    const stats = await pool.stats();
+    console.log(`[seed-pool] added=${added} dedup=${dedup}`);
+    console.log(`[seed-pool] pool stats:`, stats);
+    process.exit(0);
+  } catch (e) {
+    console.error('[seed-pool] FAILED:', e);
+    process.exit(1);
+  }
+})();

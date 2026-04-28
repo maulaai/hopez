@@ -1,8 +1,8 @@
 {
   "name": "hopez-api",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "HOPEZ.AI backend — issues API keys and serves the HOPEZ inference gateway.",
+  "description": "HOPEZ.AI backend — Postgres-backed API gateway with 1:1 dedicated upstream key pool.",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {
@@ -15,14 +15,15 @@
     "gen-master-key": "node -e \"console.log(require('crypto').randomBytes(32).toString('base64'))\""
   },
   "dependencies": {
+    "@aws-sdk/rds-signer": "^3.658.0",
     "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^12.2.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "express-rate-limit": "^7.4.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.0"
   },
   "engines": {
     "node": ">=18"

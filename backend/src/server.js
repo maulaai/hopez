@@ -8,6 +8,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 
 const { loadConfig } = require('./config');
+const db = require('./db');
 const { router: authRouter } = require('./auth');
 const proxyRouter = require('./proxy');
 const adminRouter = require('./admin');
@@ -47,16 +48,36 @@ app.use('/v1', proxyLimiter, proxyRouter);
 
 app.use((req, res) => res.status(404).json({ error: { message: 'not_found', path: req.path } }));
 
-const PORT = config.server.port;
-app.listen(PORT, () => {
-  console.log(`[hopez-api] listening on http://localhost:${PORT}`);
-  console.log(`[hopez-api] cors origins: ${config.cors.allowed_origins.join(', ')}`);
-  if (config.pool.enabled) {
-    pool.startCooldownSweeper();
-    const stats = pool.stats();
-    console.log(`[hopez-api] pool: total=${stats.total} available=${stats.available} assigned=${stats.assigned} cooling_down=${stats.cooling_down}`);
-    if (stats.total < config.pool.min_size) {
-      console.warn(`[hopez-api] WARNING: pool size ${stats.total} < min_size ${config.pool.min_size}. Run: npm run seed-pool`);
-    }
-  }
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error('[hopez-api] unhandled:', err);
+  if (!res.headersSent) res.status(500).json({ error: { message: 'internal_error' } });
 });
+
+const PORT = config.server.port;
+
+(async () => {
+  try {
+    await db.init();
+  } catch (e) {
+    console.error('[hopez-api] DB init failed:', e.message);
+    process.exit(1);
+  }
+
+  app.listen(PORT, async () => {
+    console.log(`[hopez-api] listening on http://localhost:${PORT}`);
+    console.log(`[hopez-api] cors origins: ${config.cors.allowed_origins.join(', ')}`);
+    if (config.pool.enabled) {
+      pool.startCooldownSweeper();
+      try {
+        const stats = await pool.stats();
+        console.log(`[hopez-api] pool: total=${stats.total} available=${stats.available} assigned=${stats.assigned} cooling_down=${stats.cooling_down}`);
+        if (stats.total < config.pool.min_size) {
+          console.warn(`[hopez-api] WARNING: pool size ${stats.total} < min_size ${config.pool.min_size}. Run: npm run seed-pool`);
+        }
+      } catch (e) {
+        console.error('[hopez-api] pool stats unavailable:', e.message);
+      }
+    }
+  });
+})();
